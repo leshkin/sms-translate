@@ -18,7 +18,6 @@
       </button>
       <button
         class="mt-2 py-2.5 px-4 text-md font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 disabled:bg-gray-400"
-        :disabled="message.length === 0"
         @click="translate"
       >
         Translate
@@ -92,7 +91,6 @@ createTransliterationMapSortedByPriory()
 const convertTransliteratedSMS = (value) => {
   let str = value.toLowerCase()
   for (const [key, value] of tranliterationMap) {
-    console.log(key, value)
     str = str.replaceAll(key, value)
   }
 
