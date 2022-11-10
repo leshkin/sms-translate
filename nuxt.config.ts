@@ -4,6 +4,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss'
   ],
   app: {
+    baseURL: '/sms-translate/',
     head: {
       charset: 'utf-16',
       viewport: 'width=500, initial-scale=1', 
@@ -16,8 +17,5 @@ export default defineNuxtConfig({
         {rel: 'manifest', href: '/sms-translate/site.webmanifest'}
       ]
     },
-  },
-  router: {
-    base: '/sms-translate/'
   }
 })
