@@ -1,21 +1,51 @@
 <template>
   <div class="flex flex-col p-5">
-    <label for="message" class="block mb-2 text-2xl font-medium text-gray-900 text-center">SMS Transliteration</label>
+    <div class="mb-2 text-2xl font-medium text-gray-900 text-center">SMS Translation</div>
+    <div class="flex justify-center">
+      <div class="flex text-md font-medium text-gray-900 items-center">From</div>
+      <button
+        class="m-2 p-2 text-md font-medium text-center text-black rounded-lg border-2 border-black"
+        :class="{ 'bg-orange-400': currentLang === LANG.GE }"
+        @click="setLang(LANG.GE)"
+      >
+        Georgian 🇬🇪
+      </button>
+      <button
+        class="m-2 p-2 text-md font-medium text-center text-black rounded-lg border-2 border-black"
+        :class="{ 'bg-orange-400': currentLang === LANG.AM }"
+        @click="setLang(LANG.AM)"
+      >
+        Armenian 🇦🇲
+      </button>
+      <button
+        class="m-2 p-2 text-md font-medium text-center text-black rounded-lg border-2 border-black"
+        :class="{ 'bg-orange-400': currentLang === LANG.KZ }"
+        @click="setLang(LANG.KZ)"
+      >
+        Kazakh 🇰🇿
+      </button>
+    </div>
     <textarea
       v-model="message"
-      placeholder="SMS translitereted text"
+      placeholder="SMS transliterated text"
       rows="10"
-      class="block p-2.5 w-full text-xl text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+      class="block p-2.5 w-full text-xl text-gray-900 bg-gray-50 rounded-lg border-2 border-gray-300"
     ></textarea>
     <div class="flex gap-2 justify-center">
       <button
-        class="mt-2 py-2.5 px-4 text-md font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800"
+        class="mt-2 p-2 text-md font-medium text-center text-black bg-sky-400 rounded-lg hover:bg-sky-500 border-2 border-black"
         @click="paste"
       >
         Paste from clipboard
       </button>
       <button
-        class="mt-2 py-2.5 px-4 text-md font-medium text-center text-white bg-orange-500 rounded-lg hover:bg-orange-600 disabled:bg-gray-400"
+        class="mt-2 p-2 text-md font-medium text-center text-black bg-pink-400 rounded-lg hover:bg-pink-500 border-2 border-black"
+        @click="message = ''"
+      >
+        Clear
+      </button>
+      <button
+        class="mt-2 p-2 text-md font-medium text-center text-black bg-orange-400 rounded-lg hover:bg-orange-500 disabled:bg-gray-400 border-2 border-black"
         @click="translate"
       >
         Translate
@@ -28,9 +58,9 @@
 import { ref } from 'vue'
 
 const LANG = {
-  GE: '',
-  AM: '',
-  KZ: '',
+  GE: 'ka',
+  AM: 'hy',
+  KZ: 'kk',
 }
 
 // https://en.wikipedia.org/wiki/Romanization_of_Georgian
@@ -123,36 +153,87 @@ const AM_ASCII_SYSTEM = {
 }
 
 // https://en.wikipedia.org/wiki/Kazakh_alphabets
-const KZ_NATIONAL_SYSTEM = {}
+const KZ_NATIONAL_SYSTEM = {
+  a: 'a',
+  "a'": 'ә',
+  b: 'б',
+  v: 'в',
+  g: 'г',
+  "g'": 'ғ',
+  d: 'д',
+  e: 'е',
+  yo: 'ё',
+  j: 'ж',
+  z: 'з',
+  "i'": 'и',
+  y: 'й',
+  k: 'к',
+  q: 'қ',
+  l: 'л',
+  m: 'м',
+  n: 'н',
+  "n'": 'ң',
+  o: 'о',
+  "o'": 'ө',
+  p: 'п',
+  r: 'р',
+  s: 'с',
+  t: 'т',
+  "y'": 'у',
+  u: 'ұ',
+  f: 'ф',
+  x: 'х',
+  h: 'һ',
+  c: 'ц',
+  "c'": 'ч',
+  "s'": 'ш',
+  shch: 'щ',
+  i: 'і',
+  yu: 'ю',
+  ya: 'я',
+}
 
 const message = ref('')
-let transliterationMapGe = null
-let transliterationMapAm = null
-let transliterationMapKz = null
+let currentLang = ref(LANG.GE)
 
-const createTransliterationMapForGeorgian = () => {
-  transliterationMapGe = new Map([
-    ...Object.entries(GE_NATIONAL_SYSTEM_2002).sort((a, b) => {
-      return b[0].length - a[0].length
-    }),
-    ...Object.entries(GE_UNOFFICIAL_SYSTEM),
-  ])
+let transliterationMapGe = new Map([
+  ...Object.entries(GE_NATIONAL_SYSTEM_2002).sort((a, b) => {
+    return b[0].length - a[0].length
+  }),
+  ...Object.entries(GE_UNOFFICIAL_SYSTEM),
+])
+
+let transliterationMapAm = new Map([
+  ...Object.entries(AM_ASCII_SYSTEM).sort((a, b) => {
+    return b[0].length - a[0].length
+  }),
+])
+
+let transliterationMapKz = new Map([
+  ...Object.entries(KZ_NATIONAL_SYSTEM).sort((a, b) => {
+    return b[0].length - a[0].length
+  }),
+])
+
+const setLang = (lang) => {
+  currentLang.value = lang
 }
 
-const createTransliterationMapForArmenian = () => {
-  transliterationMapAm = new Map([
-    ...Object.entries(AM_ASCII_SYSTEM).sort((a, b) => {
-      return b[0].length - a[0].length
-    }),
-  ])
-}
-
-createTransliterationMapForGeorgian()
-createTransliterationMapForArmenian()
-
-const convertTransliteratedSMS = (value) => {
+const convertTransliteratedSMS = (value, lang) => {
+  let transliterationMap = null
+  switch (lang) {
+    case LANG.GE:
+      transliterationMap = transliterationMapGe
+      break
+    case LANG.AM:
+      transliterationMap = transliterationMapAm
+      break
+    case LANG.KZ:
+      transliterationMap = transliterationMapKz
+      break
+  }
   let str = value.toLowerCase()
-  for (const [key, value] of transliterationMapGe) {
+  for (const [key, value] of transliterationMap) {
     str = str.replaceAll(key, value)
   }
 
@@ -160,8 +241,8 @@ const convertTransliteratedSMS = (value) => {
 }
 
 const translate = async () => {
-  const str = convertTransliteratedSMS(message.value)
-  location.href = `https://translate.google.com/?sl=ka&tl=en&text=${str}&op=translate`
+  const str = convertTransliteratedSMS(message.value, currentLang.value)
+  location.href = `https://translate.google.com/?sl=${currentLang.value}&tl=en&text=${str}&op=translate`
 }
 
 const paste = async () => {
