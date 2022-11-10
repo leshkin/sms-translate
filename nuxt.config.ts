@@ -16,5 +16,8 @@ export default defineNuxtConfig({
         {rel: 'manifest', href: '/site.webmanifest'}
       ]
     },
+  },
+  router: {
+    base: '/sms-translate/'
   }
 })
