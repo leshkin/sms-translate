@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     baseURL: process.env.NODE_ENV === 'development' ? '/' : '/sms-translate/',
     head: {
       charset: 'utf-16',
-      viewport: 'width=500, initial-scale=1', 
+      viewport: 'width=device-width, initial-scale=1.0', 
       title: 'Georgian SMS Translation',
       description: 'Translation of Georgian SMS written with transliteration',
       link: [
