@@ -1,8 +1,6 @@
 <template>
   <div class="flex flex-col p-5">
-    <label for="message" class="block mb-2 text-2xl font-medium text-gray-900 text-center"
-      >Georgian SMS Translation</label
-    >
+    <label for="message" class="block mb-2 text-2xl font-medium text-gray-900 text-center">SMS Transliteration</label>
     <textarea
       v-model="message"
       placeholder="SMS translitereted text"
@@ -28,6 +26,12 @@
 
 <script setup>
 import { ref } from 'vue'
+
+const LANG = {
+  GE: '',
+  AM: '',
+  KZ: '',
+}
 
 // https://en.wikipedia.org/wiki/Romanization_of_Georgian
 const GE_NATIONAL_SYSTEM_2002 = {
@@ -74,11 +78,60 @@ const GE_UNOFFICIAL_SYSTEM = {
   w: 'წ',
 }
 
-const message = ref('')
-let tranliterationMap = null
+// https://en.wikipedia.org/wiki/Romanization_of_Armenian
+const AM_ASCII_SYSTEM = {
+  a: 'ա',
+  b: 'բ',
+  g: 'գ',
+  d: 'դ',
+  e: 'ե',
+  z: 'զ',
+  "e'": 'է',
+  "y'": 'ը',
+  "t'": 'թ',
+  zh: 'ժ',
+  i: 'ի',
+  l: 'լ',
+  x: 'խ',
+  "c'": 'ծ',
+  k: 'կ',
+  h: 'հ',
+  dz: 'ձ',
+  gh: 'ղ',
+  tw: 'ճ',
+  m: 'մ',
+  y: 'յ',
+  n: 'ն',
+  sh: 'շ',
+  vo: 'ո',
+  ch: 'չ',
+  p: 'պ',
+  j: 'ջ',
+  rr: 'ռ',
+  s: 'ս',
+  v: 'վ',
+  t: 'տ',
+  r: 'ր',
+  c: 'ց',
+  w: 'ւ',
+  "p'": 'փ',
+  "k'": 'ք',
+  o: 'օ',
+  f: 'ֆ',
+  u: 'ու',
+  ev: 'և',
+}
 
-const createTransliterationMapSortedByPriory = () => {
-  tranliterationMap = new Map([
+// https://en.wikipedia.org/wiki/Kazakh_alphabets
+const KZ_NATIONAL_SYSTEM = {}
+
+const message = ref('')
+let transliterationMapGe = null
+let transliterationMapAm = null
+let transliterationMapKz = null
+
+const createTransliterationMapForGeorgian = () => {
+  transliterationMapGe = new Map([
     ...Object.entries(GE_NATIONAL_SYSTEM_2002).sort((a, b) => {
       return b[0].length - a[0].length
     }),
@@ -86,11 +139,20 @@ const createTransliterationMapSortedByPriory = () => {
   ])
 }
 
-createTransliterationMapSortedByPriory()
+const createTransliterationMapForArmenian = () => {
+  transliterationMapAm = new Map([
+    ...Object.entries(AM_ASCII_SYSTEM).sort((a, b) => {
+      return b[0].length - a[0].length
+    }),
+  ])
+}
+
+createTransliterationMapForGeorgian()
+createTransliterationMapForArmenian()
 
 const convertTransliteratedSMS = (value) => {
   let str = value.toLowerCase()
-  for (const [key, value] of tranliterationMap) {
+  for (const [key, value] of transliterationMapGe) {
     str = str.replaceAll(key, value)
   }
 
@@ -99,7 +161,7 @@ const convertTransliteratedSMS = (value) => {
 
 const translate = async () => {
   const str = convertTransliteratedSMS(message.value)
-  location.href = `https://translate.google.com/?hl=en&sl=ka&tl=en&text=${str}&op=translate`
+  location.href = `https://translate.google.com/?sl=ka&tl=en&text=${str}&op=translate`
 }
 
 const paste = async () => {
