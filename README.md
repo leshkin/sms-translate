@@ -7,14 +7,7 @@ Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
 Make sure to install the dependencies:
 
 ```bash
-# yarn
-yarn install
-
-# npm
-npm install
-
-# pnpm
-pnpm install --shamefully-hoist
+npm i
 ```
 
 ## Development Server
@@ -30,13 +23,11 @@ npm run dev
 Build the application for production:
 
 ```bash
-npm run build
+npm run generate
 ```
 
-Locally preview production build:
+Deploy to GitHub Pages
 
 ```bash
-npm run preview
+npm run deploy
 ```
-
-Checkout the [deployment documentation](https://v3.nuxtjs.org/guide/deploy/presets) for more information.
