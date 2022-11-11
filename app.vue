@@ -33,12 +33,6 @@
     ></textarea>
     <div class="flex gap-2 justify-center">
       <button
-        class="mt-2 p-2 text-md font-medium text-center text-black bg-sky-400 rounded-lg hover:bg-sky-500 border-2 border-black"
-        @click="paste"
-      >
-        Paste from clipboard
-      </button>
-      <button
         class="mt-2 p-2 text-md font-medium text-center text-black bg-pink-400 rounded-lg hover:bg-pink-500 border-2 border-black"
         @click="message = ''"
       >
@@ -244,9 +238,5 @@ const convertTransliteratedSMS = (value, lang) => {
 const translate = async () => {
   const str = convertTransliteratedSMS(message.value, currentLang.value)
   location.href = `https://translate.google.com/?sl=${currentLang.value}&tl=en&text=${str}&op=translate`
-}
-
-const paste = async () => {
-  message.value = await navigator.clipboard.readText()
 }
 </script>
