@@ -1,24 +1,24 @@
 <template>
   <div class="flex flex-col p-5">
-    <div class="mb-2 text-2xl font-medium text-gray-900 text-center">SMS Translation</div>
-    <div class="flex justify-center">
+    <div class="text-2xl font-medium text-gray-900 text-center">SMS Translation</div>
+    <div class="flex justify-center mt-4 gap-2">
       <div class="flex text-md font-medium text-gray-900 items-center">From</div>
       <button
-        class="m-2 p-2 text-md font-medium text-center text-black rounded-lg border-2 border-black"
+        class="p-2 text-md font-medium text-center text-black rounded-lg border-2 border-black"
         :class="{ 'bg-orange-400': currentLang === LANG.GE }"
         @click="setLang(LANG.GE)"
       >
         Georgian 🇬🇪
       </button>
       <button
-        class="m-2 p-2 text-md font-medium text-center text-black rounded-lg border-2 border-black"
+        class="p-2 text-md font-medium text-center text-black rounded-lg border-2 border-black"
         :class="{ 'bg-orange-400': currentLang === LANG.AM }"
         @click="setLang(LANG.AM)"
       >
         Armenian 🇦🇲
       </button>
       <button
-        class="m-2 p-2 text-md font-medium text-center text-black rounded-lg border-2 border-black"
+        class="p-2 text-md font-medium text-center text-black rounded-lg border-2 border-black"
         :class="{ 'bg-orange-400': currentLang === LANG.KZ }"
         @click="setLang(LANG.KZ)"
       >
@@ -29,21 +29,27 @@
       v-model="message"
       placeholder="SMS transliterated text"
       rows="10"
-      class="block p-2.5 w-full text-xl text-gray-900 bg-gray-50 rounded-lg border-2 border-gray-300"
+      class="block mt-4 p-2 w-full text-xl text-gray-900 bg-gray-50 rounded-lg border-2 border-gray-300"
     ></textarea>
-    <div class="flex gap-2 justify-center">
+    <div class="flex gap-2 justify-center mt-4">
       <button
-        class="mt-2 p-2 text-md font-medium text-center text-black bg-pink-400 rounded-lg hover:bg-pink-500 border-2 border-black"
+        class="p-2 text-md font-medium text-center text-black bg-pink-400 rounded-lg hover:bg-pink-500 border-2 border-black"
         @click="message = ''"
       >
         Clear
       </button>
       <button
-        class="mt-2 p-2 text-md font-medium text-center text-black bg-orange-400 rounded-lg hover:bg-orange-500 disabled:bg-gray-400 border-2 border-black"
+        class="p-2 text-md font-medium text-center text-black bg-orange-400 rounded-lg hover:bg-orange-500 disabled:bg-gray-400 border-2 border-black"
         @click="translate"
       >
         Translate
       </button>
+    </div>
+    <div class="p-4 mt-4 border-2 border-black rounded-lg bg-yellow-100" role="alert">
+      <div class="m-2 text-md text-black">
+        Google Translate does not allow you to translate SMS written using transliteration. This service translates the
+        transliterated text into plain text, and then Google Translate does the work.
+      </div>
     </div>
   </div>
 </template>
