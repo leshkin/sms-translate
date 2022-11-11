@@ -180,6 +180,7 @@ const KZ_NATIONAL_SYSTEM = {
   s: 'с',
   t: 'т',
   "y'": 'у',
+  w: 'у',
   u: 'ұ',
   f: 'ф',
   x: 'х',
